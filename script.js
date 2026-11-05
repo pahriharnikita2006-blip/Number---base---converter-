@@ -1,5 +1,4 @@
 
-
 let ModuleReady = null;
 
 createConverterModule().then((module) => {
@@ -12,26 +11,27 @@ function convertNumber() {
         return;
     }
 
-    let input = document.getElementById("decimal").value;
+    const input = document.getElementById("number").value.trim();
+    const base = Number(document.getElementById("base").value);
 
-    if (input.trim() === "") {
+    if (input === "") {
         alert("Please enter a number");
         return;
     }
 
-    let result = ModuleReady.ccall(
+    const result = ModuleReady.ccall(
         "convert_all",
         "string",
         ["string", "number"],
-        [input, 10]
+        [input, base]
     );
 
     if (result === "ERROR") {
-        alert("Invalid number");
+        alert("Invalid number for selected base");
         return;
     }
 
-    let values = result.split("|");
+    const values = result.split("|");
 
     document.getElementById("decimal").value = values[0];
     document.getElementById("binary").value = values[1];
@@ -40,6 +40,7 @@ function convertNumber() {
 }
 
 function clearFields() {
+    document.getElementById("number").value = "";
     document.getElementById("decimal").value = "";
     document.getElementById("binary").value = "";
     document.getElementById("octal").value = "";
