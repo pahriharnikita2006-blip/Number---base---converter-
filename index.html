@@ -6,38 +6,41 @@
     <title>Number Base Converter</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
 <body>
 
     <h1>Number Base Converter</h1>
+    <p>Convert numbers between Decimal, Binary, Octal and Hexadecimal.</p>
 
-    <p>
-        Convert numbers between Decimal, Binary,
-        Octal and Hexadecimal.
-    </p>
+    <h3>Select Input Base</h3>
+    <select id="base">
+        <option value="10">Decimal (Base 10)</option>
+        <option value="2">Binary (Base 2)</option>
+        <option value="8">Octal (Base 8)</option>
+        <option value="16">Hexadecimal (Base 16)</option>
+    </select>
 
-    <hr>
-
-    <h3>Decimal (Base 10)</h3>
-    <input type="number" id="decimal" placeholder="Enter Decimal Number">
-
-    <h3>Binary (Base 2)</h3>
-    <input type="text" id="binary" placeholder="Binary Result" readonly>
-
-    <h3>Octal (Base 8)</h3>
-    <input type="text" id="octal" placeholder="Octal Result" readonly>
-
-    <h3>Hexadecimal (Base 16)</h3>
-    <input type="text" id="hexadecimal" placeholder="Hexadecimal Result" readonly>
+    <h3>Enter Number</h3>
+    <input type="text" id="number" placeholder="Enter your number">
 
     <br><br>
-
     <button onclick="convertNumber()">Convert</button>
-
     <button onclick="clearFields()">Clear</button>
 
+    <h3>Decimal</h3>
+    <input id="decimal" readonly>
+
+    <h3>Binary</h3>
+    <input id="binary" readonly>
+
+    <h3>Octal</h3>
+    <input id="octal" readonly>
+
+    <h3>Hexadecimal</h3>
+    <input id="hexadecimal" readonly>
+
     <script src="converter.js"></script>
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
 </body>
 </html>
+
