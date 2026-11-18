@@ -1,46 +1,267 @@
 
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Number Base Converter</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number Base Converter</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #101b3d, #263d78, #563c91);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 35px 20px;
+    color: white;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    background: rgba(255,255,255,0.11);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 25px;
+    padding: 45px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    backdrop-filter: blur(15px);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 38px;
+}
+
+h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    color: #ffffff;
+    text-shadow: 0 3px 15px rgba(0,0,0,0.3);
+}
+
+header p {
+    font-size: clamp(15px, 2vw, 19px);
+    color: #dce5ff;
+    line-height: 1.6;
+}
+
+.input-section {
+    background: rgba(255,255,255,0.12);
+    padding: 28px;
+    border-radius: 18px;
+    margin-bottom: 28px;
+    border: 1px solid rgba(255,255,255,0.18);
+}
+
+h3 {
+    font-size: 21px;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+select, input {
+    width: 100%;
+    padding: 17px;
+    border: 2px solid #d6ddff;
+    border-radius: 11px;
+    font-size: 19px;
+    background: #ffffff;
+    color: #172554;
+    outline: none;
+    transition: 0.3s;
+}
+
+select {
+    margin-bottom: 18px;
+    cursor: pointer;
+}
+
+input:focus, select:focus {
+    border-color: #8eb7ff;
+    box-shadow: 0 0 12px rgba(142,183,255,0.5);
+}
+
+.results {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.result-card {
+    background: rgba(255,255,255,0.12);
+    padding: 25px;
+    border-radius: 17px;
+    border: 1px solid rgba(255,255,255,0.18);
+    transition: 0.3s;
+}
+
+.result-card:hover {
+    background: rgba(255,255,255,0.19);
+    transform: translateY(-3px);
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 32px;
+}
+
+button {
+    padding: 17px 45px;
+    font-size: 19px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.convert {
+    background: linear-gradient(135deg, #65a5ff, #a5c8ff);
+    color: #102044;
+}
+
+.clear {
+    background: #ffffff;
+    color: #25345c;
+}
+
+button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+footer {
+    text-align: center;
+    margin-top: 32px;
+    color: #cbd7ff;
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+@media (min-width: 1200px) {
+    .container {
+        padding: 55px;
+    }
+
+    .result-card {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 650px) {
+    body {
+        padding: 18px 12px;
+    }
+
+    .container {
+        padding: 23px 17px;
+    }
+
+    .results {
+        grid-template-columns: 1fr;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <h1>Number Base Converter</h1>
-    <p>Convert numbers between Decimal, Binary, Octal and Hexadecimal.</p>
+<div class="container">
 
-    <h3>Select Input Base</h3>
-    <select id="base">
-        <option value="10">Decimal (Base 10)</option>
-        <option value="2">Binary (Base 2)</option>
-        <option value="8">Octal (Base 8)</option>
-        <option value="16">Hexadecimal (Base 16)</option>
-    </select>
+    <header>
+        <h1>NUMBER BASE CONVERTER</h1>
+        <p>
+            Convert numbers easily between
+            Decimal, Binary, Octal and Hexadecimal.
+        </p>
+    </header>
 
-    <h3>Enter Number</h3>
-    <input type="text" id="number" placeholder="Enter your number">
+    <div class="input-section">
 
-    <br><br>
-    <button onclick="convertNumber()">Convert</button>
-    <button onclick="clearFields()">Clear</button>
+        <h3>Select Input Base</h3>
 
-    <h3>Decimal</h3>
-    <input id="decimal" readonly>
+        <select id="inputBase">
+            <option value="10">Decimal (Base 10)</option>
+            <option value="2">Binary (Base 2)</option>
+            <option value="8">Octal (Base 8)</option>
+            <option value="16">Hexadecimal (Base 16)</option>
+        </select>
 
-    <h3>Binary</h3>
-    <input id="binary" readonly>
+        <input type="text" id="numberInput"
+               placeholder="Enter Number">
 
-    <h3>Octal</h3>
-    <input id="octal" readonly>
+    </div>
 
-    <h3>Hexadecimal</h3>
-    <input id="hexadecimal" readonly>
+    <div class="results">
 
-    <script src="converter.js"></script>
-    <script src="script.js"></script>
+        <div class="result-card">
+            <h3>Decimal (Base 10)</h3>
+            <input type="text" id="decimal"
+                   placeholder="Decimal Result" readonly>
+        </div>
+
+        <div class="result-card">
+            <h3>Binary (Base 2)</h3>
+            <input type="text" id="binary"
+                   placeholder="Binary Result" readonly>
+        </div>
+
+        <div class="result-card">
+            <h3>Octal (Base 8)</h3>
+            <input type="text" id="octal"
+                   placeholder="Octal Result" readonly>
+        </div>
+
+        <div class="result-card">
+            <h3>Hexadecimal (Base 16)</h3>
+            <input type="text" id="hexadecimal"
+                   placeholder="Hexadecimal Result" readonly>
+        </div>
+
+    </div>
+
+    <div class="buttons">
+
+        <button class="convert" onclick="convertNumber()">
+            CONVERT
+        </button>
+
+        <button class="clear" onclick="clearFields()">
+            CLEAR
+        </button>
+
+    </div>
+
+    <footer>
+        Number Base Converter | IT Project
+    </footer>
+
+</div>
+
+<script src="converter.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
+
 
