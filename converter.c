@@ -1,30 +1,16 @@
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-
-int getDecimal(char num[], int base, long long *value)
-{
-    char *end;
-    long long result = strtoll(num, &end, base);
-
-    if (num[0] == '\0' || *end != '\0')
-        return 0;
-
-    if (result < 0)
-        return 0;
-
-    *value = result;
-    return 1;
-}
+#include <limits.h>
+#include <emscripten.h>
 
 void convert(long long number, int base, char output[])
 {
     char digits[] = "0123456789ABCDEF";
     char temp[100];
     int i = 0;
+    int j = 0;
 
     if (number == 0)
     {
@@ -35,72 +21,71 @@ void convert(long long number, int base, char output[])
     while (number > 0)
     {
         temp[i++] = digits[number % base];
-        number = number / base;
+        number /= base;
     }
 
-    int j = 0;
     while (i > 0)
+    {
         output[j++] = temp[--i];
+    }
 
     output[j] = '\0';
 }
 
-int main()
+EMSCRIPTEN_KEEPALIVE
+char* convert_all(const char *input, int base)
 {
-    char input[100];
+    static char result[400];
+
     char decimal[100];
     char binary[100];
     char octal[100];
     char hexadecimal[100];
 
-    int choice;
-    long long number;
+    unsigned long long number = 0;
 
-    printf("\n==============================\n");
-    printf("   NUMBER BASE CONVERTER\n");
-    printf("==============================\n");
+    if (input == NULL || input[0] == '\0')
+        return "ERROR";
 
-    printf("\nSelect Input Number System:\n");
-    printf("1. Decimal\n");
-    printf("2. Binary\n");
-    printf("3. Octal\n");
-    printf("4. Hexadecimal\n");
+    if (base != 2 && base != 8 && base != 10 && base != 16)
+        return "ERROR";
 
-    printf("\nEnter your choice: ");
-    scanf("%d", &choice);
-
-    int base;
-
-    switch (choice)
+    for (int i = 0; input[i] != '\0'; i++)
     {
-        case 1: base = 10; break;
-        case 2: base = 2; break;
-        case 3: base = 8; break;
-        case 4: base = 16; break;
-        default:
-            printf("Invalid choice!");
-            return 0;
+        int digit;
+
+        char ch = input[i];
+
+        if (ch >= '0' && ch <= '9')
+            digit = ch - '0';
+        else if (ch >= 'A' && ch <= 'F')
+            digit = ch - 'A' + 10;
+        else if (ch >= 'a' && ch <= 'f')
+            digit = ch - 'a' + 10;
+        else
+            return "ERROR";
+
+        if (digit >= base)
+            return "ERROR";
+
+        if (number > (ULLONG_MAX - digit) / base)
+            return "ERROR";
+
+        number = number * base + digit;
     }
 
-    printf("Enter number: ");
-    scanf("%99s", input);
+    if (number > LLONG_MAX)
+        return "ERROR";
 
-    if (!getDecimal(input, base, &number))
-    {
-        printf("Invalid number for selected base!");
-        return 0;
-    }
+    long long value = (long long)number;
 
-    convert(number, 10, decimal);
-    convert(number, 2, binary);
-    convert(number, 8, octal);
-    convert(number, 16, hexadecimal);
+    convert(value, 10, decimal);
+    convert(value, 2, binary);
+    convert(value, 8, octal);
+    convert(value, 16, hexadecimal);
 
-    printf("\n========== RESULTS ==========\n");
-    printf("Decimal      : %s\n", decimal);
-    printf("Binary       : %s\n", binary);
-    printf("Octal        : %s\n", octal);
-    printf("Hexadecimal  : %s\n", hexadecimal);
+    snprintf(result, sizeof(result), "%s|%s|%s|%s",
+             decimal, binary, octal, hexadecimal);
 
-    return 0;
+    return result;
 }
